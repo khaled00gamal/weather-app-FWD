@@ -19,6 +19,7 @@ generate.addEventListener("click", function (e) {
       postData("/sendData",{date: newDate,content:content,temp:data.main.temp});
   }).then(function(){
       //update the ui with the data recieved
+      updateUI();
   })
   myForm.reset(); 
 });
@@ -55,5 +56,27 @@ const postData = async function (url = "", data = {}) {
 
   } catch(exception){
       console.log("error",exception);
+  }
+
+
+  const isValid =function(data){
+      if(data!== undefined){
+          return true;
+      }
+  }
+
+  const updateUI = async function(){
+      let res=await fetch("/getData");
+      try{
+          const jsonData=await res.json();
+          if(isValid(jsonData.date)&&isValid(jsonData.content)&&isValid(jsonData.temp)){
+              document.getElementById("date").innerHTML=jsonData.date;
+              document.getElementById("content").innerHTML=jsonData.content;
+              document.getElementById("temp").innerHTML=jsonData.temp;
+          }
+
+      }catch(exception){
+          console.log("error",exception);
+      }
   }
 };
