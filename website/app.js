@@ -1,6 +1,7 @@
 /* Global Variables */
 const url = "https://api.openweathermap.org/data/2.5/weather";
 const apiKey = "8a7e82e36ec4c18d6f49916ce52b0131";
+const myForm = document.getElementById("myForm");
 
 // Create a new date instance dynamically with JS
 let d = new Date();
@@ -15,10 +16,11 @@ generate.addEventListener("click", function (e) {
   const content = document.getElementById("feelings").value;
 
   getData(url,zip,apiKey).then(function(data){
-      postData("/getData",{date: newDate,content:content,temp:data.main.temp});
+      postData("/sendData",{date: newDate,content:content,temp:data.main.temp});
   }).then(function(){
       //update the ui with the data recieved
   })
+  myForm.reset(); 
 });
 
 //get data from api
