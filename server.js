@@ -7,18 +7,21 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static("website"));
 
-let projectData = {};
+const projectData = {};
+
+app.get("/getData",function(req,res){
+  res.send(projectData);
+  });
+  
 
 app.post("/sendData",function(req,res){
+console.log(req.body);//for testing
 projectData['date']=req.body.date;
 projectData['temp']=req.body.temp;
 projectData['content']=req.body.content;
 res.send(projectData);
 });
 
-app.get("/getData",function(req,res){
-res.send(projectData);
-});
 
 
 app.listen(3000,function(){

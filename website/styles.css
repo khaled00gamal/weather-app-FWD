@@ -17,7 +17,7 @@ body{
 }
 
 .holder{
-
+    margin: auto;
 }
 
 .entry{
@@ -25,7 +25,7 @@ body{
 }
 
 #entryHolder{
-
+  
 }
 
 #date{

@@ -1,6 +1,6 @@
 /* Global Variables */
-const url = "https://api.openweathermap.org/data/2.5/weather";
-const apiKey = "8a7e82e36ec4c18d6f49916ce52b0131";
+const url = "http://api.openweathermap.org/data/2.5/forecast";
+const apiKey = "3bd9f680f6258199604fcb6f2c009227";
 const myForm = document.getElementById("myForm");
 
 // Create a new date instance dynamically with JS
@@ -15,20 +15,27 @@ generate.addEventListener("click", function (e) {
   const zip = document.getElementById("zip").value;
   const content = document.getElementById("feelings").value;
 
-  getData(url,zip,apiKey).then(function(data){
-      postData("/sendData",{date: newDate,content:content,temp:data.main.temp});
-  }).then(function(){
+  getData(url, zip, apiKey)
+    .then(function (data) {
+      postData("/sendData", {
+        date: newDate, 
+        content: content,
+        temp: data.list[0].main.temp,
+      });
+    })
+    .then(function () {
       //update the ui with the data recieved
       updateUI();
-  })
-  myForm.reset(); 
+    });
+  myForm.reset();
 });
 
 //get data from api
 const getData = async function (url, zip, apiKey) {
-  const res = fetch(`${url}?q=${zip}&appid=${apiKey}`);
+  const res = await fetch(`${url}?zip=${zip}&appid=${apiKey}`);
   try {
     const jsonData = await res.json();
+    console.log(jsonData);
     return jsonData;
   } catch (exception) {
     console.log("error", exception);
@@ -43,40 +50,40 @@ const postData = async function (url = "", data = {}) {
     headers: {
       "content-type": "application/json",
     },
-    body: JSON.stringify({
-      date: data.date,
-      temp: data.temp,
-      content: data.content,
-    })
+    body: JSON.stringify(data),
   });
 
-  try{
-      const newData = await res.json();
-      return newData;
-
-  } catch(exception){
-      console.log("error",exception);
+  try {
+    const newData = await res.json();
+    return newData;
+  } catch (exception) {
+    console.log("error", exception);
   }
+}
 
-
-  const isValid =function(data){
-      if(data!== undefined){
-          return true;
-      }
-  }
-
-  const updateUI = async function(){
-      let res=await fetch("/getData");
-      try{
-          const jsonData=await res.json();
-          if(isValid(jsonData.date)&&isValid(jsonData.content)&&isValid(jsonData.temp)){
-              document.getElementById("date").innerHTML=jsonData.date;
-              document.getElementById("content").innerHTML=jsonData.content;
-              document.getElementById("temp").innerHTML=jsonData.temp;
-          }
-
-      }catch(exception){
-          console.log("error",exception);
-      }
+const isValid = function (data) {
+  if (data !== undefined) {
+    return true;
   }
 };
+
+
+  const updateUI = async function () {
+    const req = await fetch("/getData");
+    try {
+      const jsonData = await req.json();
+      if (
+        isValid(jsonData.date) &&
+        isValid(jsonData.content) &&
+        isValid(jsonData.temp)
+      ) {
+        document.getElementById("date").innerHTML = `date is ${jsonData.date}`;
+        document.getElementById("content").innerHTML = `feeling ${jsonData.content}`;
+        document.getElementById("temp").innerHTML = `temperature is ${jsonData.temp}` ;
+      }
+      
+    } catch (exception) {
+      console.log("error", exception);
+    }
+  };
+
