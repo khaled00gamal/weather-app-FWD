@@ -5,7 +5,7 @@ const myForm = document.getElementById("myForm");
 
 // Create a new date instance dynamically with JS
 let d = new Date();
-let newDate = d.getMonth() + "." + d.getDate() + "." + d.getFullYear();
+let newDate = d.getMonth() + "/" + d.getDate() + "/" + d.getFullYear();
 
 const generate = document.getElementById("generate");
 
@@ -32,7 +32,7 @@ generate.addEventListener("click", function (e) {
 
 //get data from api
 const getData = async function (url, zip, apiKey) {
-  const res = await fetch(`${url}?zip=${zip}&appid=${apiKey}`);
+  const res = await fetch(`${url}?zip=${zip}&appid=${apiKey}&units=metric`);
   try {
     const jsonData = await res.json();
     console.log(jsonData);
@@ -79,7 +79,7 @@ const isValid = function (data) {
       ) {
         document.getElementById("date").innerHTML = `date is ${jsonData.date}`;
         document.getElementById("content").innerHTML = `feeling ${jsonData.content}`;
-        document.getElementById("temp").innerHTML = `temperature is ${jsonData.temp}` ;
+        document.getElementById("temp").innerHTML = `temperature is ${jsonData.temp} Celsius` ;
       }
       
     } catch (exception) {
